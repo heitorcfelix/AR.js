@@ -13,7 +13,7 @@
 <script>THREEx.ArToolkitContext.baseURL = '../'</script>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'><div style='position: absolute; top: 10px; width:100%; text-align: center; z-index: 1;'>
-	<a href="https://github.com/jeromeetienne/AR.js/" target="_blank">AR.js</a> - Measure the distance between 2 markers - hiro and kanji
+	<p id="score" style='font-size: 35px; color: red; font-family: Cambria;'></p>
 	<br/>
 	Contact me any time at <a href='https://twitter.com/jerome_etienne' target='_blank'>@jerome_etienne</a>
 </div>
@@ -119,10 +119,10 @@
 	})
 
 	// add a gizmo in the center of the marker
-	var geometry	= new THREE.CubeGeometry(1,0,1);
-	var material	= new THREE.MeshStandardMaterial({
+	var geometry	= new THREE.CubeGeometry(1,1,1);
+	var material	= new THREE.MeshBasicMaterial({
 		opacity: 1,
-		color: 0x000000
+		color: 0xFFFFFF
 	}); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	markerRoot1.add( mesh );
@@ -142,9 +142,10 @@
 	})
 
 	// add a gizmo in the center of the marker
-	var geometry	= new THREE.OctahedronGeometry( 0.1, 0 )
-	var material	= new THREE.MeshNormalMaterial({
-		wireframe: true
+	var geometry	= new THREE.CubeGeometry( 1, 1, 1 )
+	var material	= new THREE.MeshBasicMaterial({
+		//opacity: 1,
+		color: 0xFFFFFF
 	}); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	markerRoot2.add( mesh );
@@ -164,9 +165,9 @@
 	})
 
 	// add a gizmo in the center of the marker
-	var geometry	= new THREE.OctahedronGeometry( 0.1, 0 )
-	var material	= new THREE.MeshNormalMaterial({
-		wireframe: true
+	var geometry	= new THREE.CubeGeometry(1, 1, 1 )
+	var material	= new THREE.MeshBasicMaterial({
+		color: 0x000000
 	}); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	markerRoot3.add( mesh );
@@ -186,9 +187,9 @@
 	})
 
 	// add a gizmo in the center of the marker
-	var geometry	= new THREE.OctahedronGeometry( 0.1, 0 )
-	var material	= new THREE.MeshNormalMaterial({
-		wireframe: true
+	var geometry	= new THREE.CubeGeometry(1, 1, 1)
+	var material	= new THREE.MeshBasicMaterial({
+		color: 0x000000
 	}); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	markerRoot4.add( mesh );
@@ -208,9 +209,9 @@
 	})
 
 	// add a gizmo in the center of the marker
-	var geometry	= new THREE.OctahedronGeometry( 0.1, 0 )
-	var material	= new THREE.MeshNormalMaterial({
-		wireframe: true
+	var geometry	= new THREE.CubeGeometry(1, 1, 1 )
+	var material	= new THREE.MeshBasicMaterial({
+		color: 0xFF0000
 	}); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	markerRoot5.add( mesh );
@@ -230,9 +231,9 @@
 	})
 
 	// add a gizmo in the center of the marker
-	var geometry	= new THREE.OctahedronGeometry( 0.1, 0 )
-	var material	= new THREE.MeshNormalMaterial({
-		wireframe: true
+	var geometry	= new THREE.CubeGeometry( 1, 1, 1 )
+	var material	= new THREE.MeshBasicMaterial({
+		color: 0xFF0000
 	}); 
 	var mesh	= new THREE.Mesh( geometry, material );
 	markerRoot6.add( mesh );
@@ -249,22 +250,46 @@
     var markerRoot6 = scene.getObjectByName('marker6')
 
 	var container = new THREE.Group
+	var score1 = 0
+	var score2 = 0
+	var score3 = 0
 	scene.add(container)
 
 	// update container.visible and scanningSpinner visibility
 	onRenderFcts.push(function(){
+		document.querySelector('.scanningSpinner').style.display = ''
 		if( markerRoot1.visible === true && markerRoot2.visible === true ){
-			container.visible = true
-			document.querySelector('.scanningSpinner').style.display = 'none'
-		}else{
-			container.visible = false
-			document.querySelector('.scanningSpinner').style.display = ''
+			score1 = 1
+			//container.visible = true
+			//document.querySelector('.scanningSpinner').style.display = 'none'
+		} else {
+			score1 = 0
 		}
+		if( markerRoot3.visible === true && markerRoot4.visible === true ){
+			score2 = 1
+			//container.visible = true
+			//document.querySelector('.scanningSpinner').style.display = 'none'
+		} else {
+			score2 = 0
+		}
+		if( markerRoot5.visible === true && markerRoot6.visible === true ){
+			score3 = 1
+			//container.visible = true
+			//document.querySelector('.scanningSpinner').style.display = 'none'
+		} else{
+			score3 = 0
+			//container.visible = false
+			//document.querySelector('.scanningSpinner').style.display = ''
+		}
+		var score_total = score1 + score2 + score3
+		var text = score_total == 3 ? "You win" : ("Score: " + score_total)
+		document.getElementById("score").innerHTML = text
 	})
 	
 	//////////////////////////////////////////////////////////////////////////////
 	//		build lineMesh
 	//////////////////////////////////////////////////////////////////////////////
+	/*
 	var material = new THREE.LineDashedMaterial( {
 		dashSize: 1,
 		gapSize: 1,
@@ -289,13 +314,14 @@
 		lineMesh.material.scale = length * 10
 		lineMesh.material.needsUpdate = true
 	})
-
+	*/
 
 	//////////////////////////////////////////////////////////////////////////////
 	//		display the distance between the 2 markers
 	//////////////////////////////////////////////////////////////////////////////
 
 	// build texture
+	/*
 	var canvas = document.createElement( 'canvas' );
 	canvas.width = 128;
 	canvas.height = 64;
@@ -318,7 +344,7 @@
 
 		// get the text to display
 		var length = markerRoot1.position.distanceTo(markerRoot2.position)
-		var text = length.toFixed(2)
+		var text = score1 + score2 + score3
 		
 		// put the text in the sprite
 		context.font = '40px monospace';
@@ -327,6 +353,7 @@
 		context.fillText(text, canvas.width/4, 3*canvas.height/4 )
 		sprite.material.map.needsUpdate = true
 	})
+	*/
 	
 })()
 	//////////////////////////////////////////////////////////////////////////////////
@@ -357,11 +384,11 @@
 <!-- Scanning animation when the marker are not visible -->
 <div class="scanningSpinner">
 	<label>
-		Scanning
+		Score:
 	</label>
-	<div class="rect1"></div>
-	<div class="rect2"></div>
-	<div class="rect3"></div>
+	<!-- <div class="rect1"></div> -->
+	<!-- <div class="rect2"></div> -->
+	<!-- <div class="rect3"></div> -->
 </div>
 <style>
 .scanningSpinner {
@@ -372,7 +399,7 @@
 
 .scanningSpinner label {
 	display: block;
-	color: #333;
+	color: #000;
 	font-size: 200%;
 }
 
