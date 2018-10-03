@@ -1,6 +1,6 @@
 # Memory Game using AR.js
 
-An application example using AR.js
+An application example using AR.js  
 AR.js available at https://github.com/jeromeetienne/AR.js
 
 ### To Run:
